@@ -3,6 +3,7 @@ const clear = require("clear");
 const figlet = require("figlet");
 const files = require("./lib/files");
 const inquirer = require("./lib/inquirer");
+const github = require("./lib/github");
 
 console.log(
     chalk.yellow(
@@ -16,8 +17,13 @@ console.log(
 // };
 
 const run = async () => {
-    const credentials = await inquirer.askGithubCredentials();
-    console.log(credentials);
+    let token = github.getStoredGithubToken();
+
+    if (!token) {
+        await github.setGithubCredentials();
+        token = await github.registerNewToken();
+    }
+    console.log(token);
 };
 
 run();
